@@ -4,7 +4,7 @@
   "description": "The file acts as a file-server and database to manage the apps repo",
   "main": "index.js",
   "scripts": {
-    "push": "git add . && git commit -m Test && git push"
+    "push": "git add . && git commit -m Test && git pull && git push"
   },
   "repository": {
     "type": "git",
