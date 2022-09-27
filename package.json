@@ -1,0 +1,23 @@
+{
+  "name": "ahq-store-data",
+  "version": "1.0.0",
+  "description": "The file acts as a file-server and database to manage the apps repo",
+  "main": "index.js",
+  "scripts": {
+    "push": "git add . && git commit -m Test && git push"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahqsoftwares/ahq-store-data.git"
+  },
+  "keywords": [],
+  "author": "AHQ Softwares",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahqsoftwares/ahq-store-data/issues"
+  },
+  "homepage": "https://github.com/ahqsoftwares/ahq-store-data#readme",
+  "dependencies": {
+    "firebase-admin": "^11.0.1"
+  }
+}

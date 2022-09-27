@@ -1,0 +1,30 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Github Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Nodejs
+        uses: actions/setup-node@v3
+        with:
+          cache: "yarn"
+
+      - name: Install
+        run: yarn install
+
+      - name: Setup Database
+        run: node index.js
+        env:
+          TOKEN: {{ $secrets.AHQ_STORE_ACCOUNT_DATA }}
