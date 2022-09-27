@@ -41,7 +41,7 @@ const db = getFirestore(app);
     console.log(doc.id);
     console.log(doc.data());
     allApps[doc.id] = doc.data();
-    apps[doc.data().name] = doc.id;
+    apps[doc.data().title] = doc.id;
   });
 
   fs.writeFile("./database/apps.json", JSON.stringify(allApps), (err) => {
@@ -50,5 +50,5 @@ const db = getFirestore(app);
   fs.writeFile("./database/mapped.json", JSON.stringify(apps), (err) => {
     console.log(err || "Saved Apps name cache!");
   });
-  
+
 })()
