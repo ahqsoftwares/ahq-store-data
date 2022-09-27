@@ -27,4 +27,4 @@ jobs:
       - name: Setup Database
         run: node index.js
         env:
-          TOKEN: {{ $secrets.AHQ_STORE_ACCOUNT_DATA }}
+          TOKEN: {{ secrets.AHQ_STORE_ACCOUNT_DATA }}
