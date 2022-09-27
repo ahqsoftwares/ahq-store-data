@@ -3,18 +3,23 @@ const admin = require("firebase-admin");
 const fs = require("fs");
 const {getFirestore} = require("firebase-admin/firestore");
 const {getAuth} = require("firebase-admin/auth");
+let users = [],
+allApps = {},
+apps = {},
+homeScreen = [];
 
 const app = admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(process.env.TOKEN)),
   databaseURL: "https://simple-host-api-default-rtdb.firebaseio.com"
 });
+const auth = getAuth(app);
 
 const listAllUsers = async(nextPageToken) => {
-  await getAuth(app)
+  await auth
     .listUsers(1000, nextPageToken)
     .then(async(listUsersResult) => {
       listUsersResult.users.forEach((userRecord) => {
-        console.log('user', userRecord.toJSON());
+        users.push(userRecord.toJSON());
       });
       if (listUsersResult.pageToken) {
         // List next batch of users.
@@ -31,13 +36,19 @@ const db = getFirestore(app);
 (async() => {
   await listAllUsers();
   const ref = await db.collection("apps").get();
-  console.log("Working");
+
   ref.forEach((doc) => {
     console.log(doc.id);
     console.log(doc.data());
-    fs.writeFile(`./database/${doc.id}`, JSON.stringify(doc.data()), { flag: "w+" }, (err) => {
-      console.log(err);
-    });
+    allApps[doc.id] = doc.data();
+    apps[doc.data().name] = doc.id;
   });
-  console.log("done!");
+
+  fs.writeFile("./database/apps.json", JSON.stringify(allApps), (err) => {
+    console.log(err || "Saved Apps list!");
+  });
+  fs.writeFile("./database/mapped.json", JSON.stringify(apps), (err) => {
+    console.log(err || "Saved Apps name cache!");
+  });
+  
 })()
