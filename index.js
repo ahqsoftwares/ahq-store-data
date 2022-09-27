@@ -35,7 +35,7 @@ const db = getFirestore(app);
   ref.forEach((doc) => {
     console.log(doc.id);
     console.log(doc.data());
-    fs.writeFile(`./database/${doc.id}`, JSON.stringify(doc.data()), (err) => {
+    fs.writeFile(`./database/${doc.id}`, JSON.stringify(doc.data()), { flag: "w+" }, (err) => {
       console.log(err);
     });
   });
