@@ -34,7 +34,7 @@ jobs:
       - name: Commit
         uses: EndBug/add-and-commit@v9
         with:
-          add: "database"
+          add: "."
           author_name: Database Manager
           author_email: ahqsecret@gmail.com
           message: "Database Refresh"
