@@ -8,6 +8,7 @@ let users = {},
 allApps = {},
 unparsedApps = [],
 apps = {},
+nonParsedHomeScreen = [],
 homeScreen = [];
 
 const app = admin.initializeApp({
@@ -27,11 +28,13 @@ const listAllUsers = async(nextPageToken) => {
           displayName
         } = userRecord.toJSON();
         
-        users[userRecord.uid] = {
-          email,
-          avatar: photoURL,
-          displayName
-        };
+        if (displayName.startsWith("(dev)")) {
+          users[userRecord.uid] = {
+            email,
+            avatar: photoURL,
+            displayName: displayName.reaplce("(dev)", "")
+          };
+        }
       });
       if (listUsersResult.pageToken) {
         // List next batch of users.
@@ -61,7 +64,7 @@ const db = getFirestore(app);
       ...data,
       author: {
         id: data.author,
-        ...users[data.author]
+        name: users[data.author]?.name
       }
     }
 
@@ -71,9 +74,13 @@ const db = getFirestore(app);
 
       filtered["download_url"] = downloadUri;
       
-      allApps[doc.id] = filtered;
-    
-      apps[doc.data().title] = doc.id;
+      if (users[data.author]) {
+        allApps[doc.id] = filtered;
+        apps[doc.data().title] = doc.id;
+      } else {
+        await db.doc(`apps/${doc.id}`).delete();
+        console.log("Deleted document with id: " + doc.id);
+      }
     } catch (e) {
       console.log("An App didn't got updated");
     }
@@ -89,4 +96,42 @@ const db = getFirestore(app);
     console.log(err || "Saved Apps name cache!");
   });
 
+  // Id - User map
+  fs.writeFile("./database/users.json", JSON.stringify(users), (err) => {
+    console.log(err || "Saved Developers List");
+  });
+
+
+  // Home Screen Data Fetch
+  const home = await db.collection("home").get();
+  home.forEach((doc) => nonParsedHomeScreen.push(doc));
+
+  for (const document of nonParsedHomeScreen) {
+    let {
+      name,
+      apps
+    } = document.data();
+
+    let checked = [];
+
+    for (const app of apps) {
+      if (allApps[app]) {
+        checked.push(app);
+      }
+    }
+
+    if (apps.length !== checked.length) {
+      await db.doc(`home/${document.id}`).set({
+        name,
+        apps: checked
+      });
+      console.log(`Deleted some refs from deleted apps`);
+    }
+
+    homeScreen.push([name, [...checked]]);
+  }
+
+  fs.writeFile("./database/home.json", JSON.stringify(homeScreen), (err) => {
+    console.log(err || "Saved Home Screen Apps");
+  });
 })()
