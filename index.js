@@ -28,12 +28,16 @@ const listAllUsers = async(nextPageToken) => {
           displayName
         } = userRecord.toJSON();
         
-        if (displayName?.startsWith("(dev)")) {
-          users[userRecord.uid] = {
-            email,
-            avatar: photoURL,
-            displayName: displayName?.replace("(dev)", "")
-          };
+        try {
+          if (displayName.startsWith("(dev)")) {
+            users[userRecord.uid] = {
+              email,
+              avatar: photoURL,
+              displayName: displayName.replace("(dev)", "")
+            };
+          }
+        } catch (e) {
+          console.log(e);
         }
       });
       if (listUsersResult.pageToken) {
