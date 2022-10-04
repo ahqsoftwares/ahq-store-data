@@ -28,7 +28,7 @@ const listAllUsers = async(nextPageToken) => {
           displayName
         } = userRecord.toJSON();
         
-        if (displayName.startsWith("(dev)")) {
+        if (displayName?.startsWith("(dev)")) {
           users[userRecord.uid] = {
             email,
             avatar: photoURL,
