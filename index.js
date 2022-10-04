@@ -32,7 +32,7 @@ const listAllUsers = async(nextPageToken) => {
           users[userRecord.uid] = {
             email,
             avatar: photoURL,
-            displayName: displayName.reaplce("(dev)", "")
+            displayName: displayName?.replace("(dev)", "")
           };
         }
       });
@@ -43,6 +43,7 @@ const listAllUsers = async(nextPageToken) => {
     })
     .catch((error) => {
       console.log('Error listing users:', error);
+      process.exit(1);
     });
 };
 
@@ -51,7 +52,7 @@ const db = getFirestore(app);
 // Save Lists
 (async() => {
   await listAllUsers();
-  const ref = await db.collection("apps").get();
+  const ref = await db.collection("apps").get().catch(() => process.exit(1));
 
   ref.forEach(async(doc) => {
     unparsedApps.push(doc);
@@ -103,7 +104,7 @@ const db = getFirestore(app);
 
 
   // Home Screen Data Fetch
-  const home = await db.collection("home").get();
+  const home = await db.collection("home").get().catch(() => process.exit(1));
   home.forEach((doc) => nonParsedHomeScreen.push(doc));
 
   for (const document of nonParsedHomeScreen) {
