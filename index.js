@@ -126,10 +126,14 @@ const db = getFirestore(app);
     }
 
     if (apps.length !== checked.length) {
-      await db.doc(`home/${document.id}`).set({
-        name,
-        apps: checked
-      });
+      if (checked.length == 0) {
+        await db.doc(`home/${document.id}`).set({
+          name,
+          apps: checked
+        });
+      } else {
+        await db.doc(`home/${document.id}`).delete();
+      }
       console.log(`Deleted some refs from deleted apps`);
     }
 
