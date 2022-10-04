@@ -47,7 +47,6 @@ const listAllUsers = async(nextPageToken) => {
     })
     .catch((error) => {
       console.log('Error listing users:', error);
-      process.exit(1);
     });
 };
 
@@ -56,7 +55,7 @@ const db = getFirestore(app);
 // Save Lists
 (async() => {
   await listAllUsers();
-  const ref = await db.collection("apps").get().catch(() => process.exit(1));
+  const ref = await db.collection("apps").get();
 
   ref.forEach(async(doc) => {
     unparsedApps.push(doc);
@@ -87,6 +86,7 @@ const db = getFirestore(app);
         console.log("Deleted document with id: " + doc.id);
       }
     } catch (e) {
+      console.log(e);
       console.log("An App didn't got updated");
     }
   }
