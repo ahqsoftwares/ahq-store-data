@@ -81,8 +81,18 @@ const db = getFirestore(app);
       if (users[data.author]) {
         allApps[doc.id] = filtered;
         apps[doc.data().title] = doc.id;
+        fs.writeFile(`./database/${doc.id}.json`, JSON.stringify(filtered), (err) => {
+          if (err) {
+            console.log(`Custom File Failed`);
+          }
+        });
       } else {
         await db.doc(`apps/${doc.id}`).delete();
+        fs.rm(`./database/${doc.id}.json`, (err) => {
+          if (err) {
+            console.log(`Got some error while deleting ${doc.id}`);
+          }
+        });
         console.log("Deleted document with id: " + doc.id);
       }
     } catch (e) {
