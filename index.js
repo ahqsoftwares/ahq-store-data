@@ -120,6 +120,15 @@ const db = getFirestore(app);
     console.log(err || "Saved Developers List");
   });
 
+  //ID - User Lazy Map
+  for (let i = 0; i < Object.keys(users).length; i++) {
+    const id = Object.keys(users)[i];
+    const user = users[id];
+
+    fs.writeFile(`./database/user${id}.json`, JSON.stringify(user), (err) => {
+      console.log(err || "Saved Developers List");
+    });
+  }
 
   // Home Screen Data Fetch
   const home = await db.collection("home").get().catch(() => process.exit(1));
