@@ -33,7 +33,8 @@ const listAllUsers = async(nextPageToken) => {
             users[userRecord.uid] = {
               email,
               avatar: photoURL,
-              displayName: displayName.replace("(dev)", "")
+              displayName: displayName.replace("(dev)", ""),
+              apps: []
             };
           }
         } catch (e) {
@@ -63,7 +64,10 @@ const db = getFirestore(app);
 
   for (const doc of unparsedApps) {
     const data = doc.data();
-    
+    if (users[data.author]) {
+      users[data.author].apps.push(doc.id);
+    }
+
     let filtered = {
       ...data,
       author: {
