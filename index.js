@@ -77,9 +77,12 @@ const db = getFirestore(app);
     }
 
     try {
-      const repoReleases = await fetch(`https://api.github.com/repos/${data.repo.author}/${data.repo.location}/releases/latest`).then(async(data)=> await data.json()).then((json) => json.assets);
+      const repoData = await fetch(`https://api.github.com/repos/${data.repo.author}/${data.repo.location}/releases/latest`).then(async(data)=> await data.json());
+      const version = repoData.tag_name;
+      const repoReleases = repoData.assets;
       const downloadUri = repoReleases.filter(({name}) => name.endsWith(data.appFinder))[0]["browser_download_url"];
 
+      filtered["version"] = version;
       filtered["download_url"] = downloadUri;
       
       if (users[data.author]) {
