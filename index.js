@@ -9,6 +9,7 @@ allApps = {},
 unparsedApps = [],
 apps = {},
 nonParsedHomeScreen = [],
+searchMap = [],
 homeScreen = [];
 
 const app = admin.initializeApp({
@@ -88,6 +89,10 @@ const db = getFirestore(app);
       if (users[data.author]) {
         allApps[doc.id] = filtered;
         apps[doc.data().title] = doc.id;
+        searchMap.push({
+          name: doc.data().title,
+          id: doc.id
+        });
         fs.writeFile(`./database/${doc.id}.json`, JSON.stringify(filtered), (err) => {
           if (err) {
             console.log(`Custom File Failed`);
@@ -121,6 +126,11 @@ const db = getFirestore(app);
   // Id - User map
   fs.writeFile("./database/users.json", JSON.stringify(users), (err) => {
     console.log(err || "Saved Developers List");
+  });
+
+  // Search Map
+  fs.writeFile("./database/search.json", JSON.stringify(searchMap), (err) => {
+    console.log(err || "Saved Search Map");
   });
 
   //ID - User Lazy Map
