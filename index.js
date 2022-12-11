@@ -1,6 +1,7 @@
 
 const admin = require("firebase-admin");
 const fs = require("fs");
+const {emptyDirSync} = require("fs-extra");
 const fetch = require("node-fetch");
 const {getFirestore} = require("firebase-admin/firestore");
 const {getAuth} = require("firebase-admin/auth");
@@ -56,6 +57,8 @@ const db = getFirestore(app);
 
 // Save Lists
 (async() => {
+   emptyDirSync("./database");
+  
   await listAllUsers();
   const ref = await db.collection("apps").get();
 
