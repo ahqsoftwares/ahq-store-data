@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/ahqsoftwares/ahq-store-data#readme",
   "dependencies": {
-    "firebase-admin": "^11.0.1"
+    "firebase-admin": "^11.0.1",
+    "fs-extra": "^11.1.0"
   }
 }
